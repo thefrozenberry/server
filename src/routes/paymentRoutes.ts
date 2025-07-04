@@ -11,7 +11,8 @@ import {
   getPaymentsByBatch,
   getPaymentReceipt,
   checkPaymentStatus,
-  checkPaymentStatusByOrderId
+  checkPaymentStatusByOrderId,
+  paymentRedirect
 } from '../controllers/paymentController';
 import { protect, admin } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validationMiddleware';
@@ -23,6 +24,7 @@ const router = express.Router();
 router.post('/webhook', phonepeWebhook);
 router.get('/status/:paymentId', checkPaymentStatus);
 router.get('/status/order/:merchantOrderId', checkPaymentStatusByOrderId);
+router.get('/redirect/:paymentId', paymentRedirect);
 
 // User payment routes
 router.post('/initiate', protect, validateRequest(paymentSchema), initiatePayment);

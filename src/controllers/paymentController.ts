@@ -53,23 +53,20 @@ export const initiatePayment = asyncHandler(async (req: Request, res: Response) 
   // Handle different payment methods
   if (paymentMethod === 'phonepe') {
     try {
-      // Generate redirect URL to frontend website with payment ID parameter
-      const redirectUrl = `https://swrzee.in/check-status?paymentId=${safeIdToString(payment._id)}`;
+      // Generate redirect URL to our server first, then redirect to frontend with payment ID
+      const redirectUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'https://swrzee.in'}/payments/redirect/${safeIdToString(payment._id)}`;
       
       logger.info(`Payment initiated for user ${user.userId}, redirecting to: ${redirectUrl}`);
-      
-      // Additional metadata
-      const metadata = {
-        udf1: `userId:${safeIdToString(user._id)}`,
-        udf2: `batchId:${batchId}`,
-        udf3: `paymentId:${safeIdToString(payment._id)}`
-      };
       
       // Generate PhonePe checkout URL using SDK
       const phonepeResponse = await phonepeSDK.generateCheckoutUrl(
         amount, 
         redirectUrl,
-        metadata
+        {
+          udf1: `userId:${safeIdToString(user._id)}`,
+          udf2: `batchId:${batchId}`,
+          udf3: `paymentId:${safeIdToString(payment._id)}`
+        }
       );
       
       // Update payment with transaction details
@@ -104,6 +101,25 @@ export const initiatePayment = asyncHandler(async (req: Request, res: Response) 
   } else {
     throw new AppError('Invalid payment method', 400);
   }
+});
+
+// @desc    Payment redirect handler (for PhonePe redirects)
+// @route   GET /api/payments/redirect/:paymentId
+// @access  Public
+export const paymentRedirect = asyncHandler(async (req: Request, res: Response) => {
+  const { paymentId } = req.params;
+  
+  // Find payment by ID
+  const payment = await Payment.findById(paymentId);
+  
+  if (!payment) {
+    // Redirect to frontend with error
+    return res.redirect('https://swrzee.in/check-status?error=payment_not_found');
+  }
+  
+  // Redirect to frontend with payment ID
+  const frontendUrl = `https://swrzee.in/check-status?paymentId=${paymentId}`;
+  res.redirect(frontendUrl);
 });
 
 // @desc    PhonePe webhook handler
