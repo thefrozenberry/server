@@ -650,6 +650,79 @@ export const getPaymentReceipt = asyncHandler(async (req: Request, res: Response
   });
 });
 
+// @desc    Get payment receipt file
+// @route   GET /api/payments/:id/receipt/file
+// @access  Private
+export const getPaymentReceiptFile = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  
+  logger.info(`Attempting to serve receipt file for payment ID: ${id}`);
+  
+  const payment = await Payment.findById(id)
+    .populate('userId', 'name email phone')
+    .populate('batchId', 'name');
+  
+  if (!payment) {
+    logger.error(`Payment not found for ID: ${id}`);
+    throw new AppError('Payment not found', 404);
+  }
+  
+  // Check if user is authorized to view this payment
+  const isAdmin = req.user?.role === 'admin';
+  const isOwner = safeIdToString(payment.userId._id) === safeIdToString(req.user?._id);
+  
+  if (!isAdmin && !isOwner) {
+    logger.error(`Unauthorized access attempt for payment ${id} by user ${req.user?._id}`);
+    throw new AppError('Not authorized to access this payment', 403);
+  }
+  
+  logger.info(`Payment found: ${payment._id}, receiptUrl: ${payment.receiptUrl}, status: ${payment.status}`);
+  
+  // Generate receipt if it doesn't exist
+  if (!payment.receiptUrl && payment.status === 'success') {
+    logger.info(`Generating receipt for payment ${id}`);
+    const receiptUrl = await generatePaymentReceipt(safeIdToString(payment._id));
+    payment.receiptUrl = receiptUrl;
+    await payment.save();
+    logger.info(`Generated receipt URL: ${receiptUrl}`);
+  }
+  
+  if (!payment.receiptUrl) {
+    logger.error(`No receipt URL available for payment ${id}`);
+    throw new AppError('Receipt not available for this payment', 400);
+  }
+  
+  // Extract file path from receipt URL
+  // The receiptUrl is in format: /uploads/receipts/filename.pdf
+  const relativePath = payment.receiptUrl;
+  const filePath = path.join(process.cwd(), relativePath);
+  
+  logger.info(`Looking for receipt file at: ${filePath}`);
+  
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    logger.error(`Receipt file not found at path: ${filePath}`);
+    // Try to list files in the directory to debug
+    const uploadsDir = path.join(process.cwd(), 'uploads', 'receipts');
+    if (fs.existsSync(uploadsDir)) {
+      const files = fs.readdirSync(uploadsDir);
+      logger.error(`Files in uploads/receipts directory: ${files.join(', ')}`);
+    } else {
+      logger.error(`Uploads directory does not exist: ${uploadsDir}`);
+    }
+    throw new AppError('Receipt file not found', 404);
+  }
+  
+  logger.info(`Receipt file found, serving: ${filePath}`);
+  
+  // Set headers for file download
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `inline; filename="receipt_${id}.pdf"`);
+  
+  // Send the file
+  res.sendFile(filePath);
+});
+
 // Helper function to generate payment receipt
 const generatePaymentReceipt = async (paymentId: string): Promise<string> => {
   try {

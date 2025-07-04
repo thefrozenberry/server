@@ -10,6 +10,7 @@ import {
   getPaymentsByUser,
   getPaymentsByBatch,
   getPaymentReceipt,
+  getPaymentReceiptFile,
   checkPaymentStatus,
   checkPaymentStatusByOrderId,
   paymentRedirect
@@ -31,6 +32,7 @@ router.post('/initiate', protect, validateRequest(paymentSchema), initiatePaymen
 router.post('/verify', protect, verifyPayment);
 router.get('/user/:userId', protect, getPaymentsByUser);
 router.get('/:id/receipt', protect, getPaymentReceipt);
+router.get('/:id/receipt/file', protect, getPaymentReceiptFile);
 router.get('/:id', protect, getPaymentById);
 
 // Admin payment routes
