@@ -54,7 +54,7 @@ export const initiatePayment = asyncHandler(async (req: Request, res: Response) 
   if (paymentMethod === 'phonepe') {
     try {
       // Generate redirect URL to our server first, then redirect to frontend with payment ID
-      const redirectUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'https://swrzee.in'}/payments/redirect/${safeIdToString(payment._id)}`;
+      const redirectUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'https://swrzee.in'}/api/payments/redirect/${safeIdToString(payment._id)}`;
       
       logger.info(`Payment initiated for user ${user.userId}, redirecting to: ${redirectUrl}`);
       
