@@ -81,13 +81,13 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/attendance', attendanceRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/services', serviceRoutes);
-app.use('/api/batches', batchRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
+app.use('/attendance', attendanceRoutes);
+app.use('/payments', paymentRoutes);
+app.use('/services', serviceRoutes);
+app.use('/batches', batchRoutes);
+app.use('/admin', adminRoutes);
 
 // Health check route
 app.get('/health', (req, res) => {

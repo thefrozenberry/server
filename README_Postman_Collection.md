@@ -10,14 +10,14 @@ The collection includes the following endpoints:
 - **GET** `/health` - Server health check (public, no authentication required)
 
 ### Admin Endpoints (Require Authentication)
-- **GET** `/api/admin/dashboard` - Get dashboard statistics (admin role required)
-- **GET** `/api/admin/logs` - Get system logs (admin role required)
-- **GET** `/api/admin/export/:type` - Export data (admin role required)
-- **POST** `/api/admin` - Create a new admin (superadmin role required)
-- **GET** `/api/admin` - Get all admins (superadmin role required)
-- **GET** `/api/admin/:id` - Get admin by ID (superadmin role required)
-- **PUT** `/api/admin/:id` - Update admin (superadmin role required)
-- **DELETE** `/api/admin/:id` - Delete admin (superadmin role required)
+- **GET** `/admin/dashboard` - Get dashboard statistics (admin role required)
+- **GET** `/admin/logs` - Get system logs (admin role required)
+- **GET** `/admin/export/:type` - Export data (admin role required)
+- **POST** `/admin` - Create a new admin (superadmin role required)
+- **GET** `/admin` - Get all admins (superadmin role required)
+- **GET** `/admin/:id` - Get admin by ID (superadmin role required)
+- **PUT** `/admin/:id` - Update admin (superadmin role required)
+- **DELETE** `/admin/:id` - Delete admin (superadmin role required)
 
 ## 🚀 Setup Instructions
 

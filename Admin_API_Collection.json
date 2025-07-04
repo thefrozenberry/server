@@ -36,12 +36,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/dashboard",
+					"raw": "{{baseUrl}}/admin/dashboard",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin",
 						"dashboard"
 					]
@@ -62,12 +61,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/logs",
+					"raw": "{{baseUrl}}/admin/logs",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin",
 						"logs"
 					]
@@ -88,12 +86,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/export/{{exportType}}?startDate={{startDate}}&endDate={{endDate}}",
+					"raw": "{{baseUrl}}/admin/export/{{exportType}}?startDate={{startDate}}&endDate={{endDate}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin",
 						"export",
 						"{{exportType}}"
@@ -141,12 +138,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/admin",
+					"raw": "{{baseUrl}}/admin",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin"
 					]
 				},
@@ -166,12 +162,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/api/admin",
+					"raw": "{{baseUrl}}/admin",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin"
 					]
 				},
@@ -191,12 +186,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/{{adminId}}",
+					"raw": "{{baseUrl}}/admin/{{adminId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin",
 						"{{adminId}}"
 					]
@@ -231,12 +225,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/{{adminId}}",
+					"raw": "{{baseUrl}}/admin/{{adminId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin",
 						"{{adminId}}"
 					]
@@ -257,12 +250,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/api/admin/{{adminId}}",
+					"raw": "{{baseUrl}}/admin/{{adminId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"admin",
 						"{{adminId}}"
 					]
