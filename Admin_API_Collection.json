@@ -1,0 +1,332 @@
+{
+	"info": {
+		"_postman_id": "admin-api-collection",
+		"name": "Admin API Collection",
+		"description": "Complete Postman collection for Admin endpoints and Health check",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Server health check endpoint - no authentication required"
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Dashboard",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{adminToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/dashboard",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"dashboard"
+					]
+				},
+				"description": "Get dashboard statistics - requires admin role"
+			},
+			"response": []
+		},
+		{
+			"name": "System Logs",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{adminToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/logs",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"logs"
+					]
+				},
+				"description": "Get system logs - requires admin role"
+			},
+			"response": []
+		},
+		{
+			"name": "Export Data",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{adminToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/export/{{exportType}}?startDate={{startDate}}&endDate={{endDate}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"export",
+						"{{exportType}}"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "{{startDate}}",
+							"description": "Start date in YYYY-MM-DD format (optional)"
+						},
+						{
+							"key": "endDate",
+							"value": "{{endDate}}",
+							"description": "End date in YYYY-MM-DD format (optional)"
+						}
+					]
+				},
+				"description": "Export data by type - requires admin role. Supported types: users, batches, payments, attendance"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{superadminToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phoneNumber\": \"9876543210\",\n  \"password\": \"Admin@123\",\n  \"role\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/admin",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin"
+					]
+				},
+				"description": "Create a new admin - requires superadmin role"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Admins",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{superadminToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin"
+					]
+				},
+				"description": "Get all admins - requires superadmin role"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Admin by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{superadminToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/{{adminId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"{{adminId}}"
+					]
+				},
+				"description": "Get admin by ID - requires superadmin role"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Admin",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{superadminToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"phoneNumber\": \"9876543211\",\n  \"password\": \"NewPassword@123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/{{adminId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"{{adminId}}"
+					]
+				},
+				"description": "Update admin - requires superadmin role"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Admin",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{superadminToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/{{adminId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"{{adminId}}"
+					]
+				},
+				"description": "Delete admin - requires superadmin role"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "your_admin_jwt_token_here",
+			"type": "string"
+		},
+		{
+			"key": "superadminToken",
+			"value": "your_superadmin_jwt_token_here",
+			"type": "string"
+		},
+		{
+			"key": "adminId",
+			"value": "admin_id_here",
+			"type": "string"
+		},
+		{
+			"key": "exportType",
+			"value": "users",
+			"type": "string"
+		},
+		{
+			"key": "startDate",
+			"value": "2024-01-01",
+			"type": "string"
+		},
+		{
+			"key": "endDate",
+			"value": "2024-12-31",
+			"type": "string"
+		}
+	]
+} 
