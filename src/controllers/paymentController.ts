@@ -53,8 +53,10 @@ export const initiatePayment = asyncHandler(async (req: Request, res: Response) 
   // Handle different payment methods
   if (paymentMethod === 'phonepe') {
     try {
-      // Generate redirect URL to frontend website
-      const redirectUrl = `https://swrzee.in/check-status`;
+      // Generate redirect URL to frontend website with payment ID parameter
+      const redirectUrl = `https://swrzee.in/check-status?paymentId=${safeIdToString(payment._id)}`;
+      
+      logger.info(`Payment initiated for user ${user.userId}, redirecting to: ${redirectUrl}`);
       
       // Additional metadata
       const metadata = {
