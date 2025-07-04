@@ -27,9 +27,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Trust proxy for rate limiting
-app.set('trust proxy', 1);
-
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI as string)
@@ -40,6 +37,9 @@ mongoose
     logger.error('MongoDB connection error:', error);
     process.exit(1);
   });
+
+// Trust proxy (important for rate limiting behind nginx)
+app.set('trust proxy', 1);
 
 // Middleware
 app.use(helmet());
@@ -58,13 +58,15 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI as string,
+      mongoUrl: process.env.MONGO_URI,
       collectionName: 'sessions',
       ttl: 24 * 60 * 60, // 24 hours in seconds
     }),
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      httpOnly: true,
+      sameSite: 'strict'
     },
   })
 );
