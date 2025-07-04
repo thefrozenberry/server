@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import { errorHandler } from './middlewares/errorHandler';
 import { logger } from './utils/logger';
 import { morganMiddleware } from './middlewares/morgan';
@@ -53,6 +54,11 @@ app.use(
     secret: process.env.SESSION_SECRET || 'secret-key',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI as string,
+      collectionName: 'sessions',
+      ttl: 24 * 60 * 60, // 24 hours in seconds
+    }),
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
