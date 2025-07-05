@@ -764,7 +764,7 @@ const generatePaymentReceipt = async (paymentId: string): Promise<string> => {
     
     // Draw logo if available
     if (logoImage) {
-      const logoWidth = 60;
+      const logoWidth = 65;
       const logoHeight = 60;
       const logoX = margin;
       const logoY = y - logoHeight;
@@ -859,7 +859,6 @@ const generatePaymentReceipt = async (paymentId: string): Promise<string> => {
       { label: 'Date:', value: dayjs(payment.paymentDate).format('DD/MM/YYYY') },
       { label: 'Payment Method:', value: payment.paymentMethod },
       { label: 'Transaction ID:', value: payment.transactionId || payment.merchantOrderId || 'N/A' },
-      { label: 'Status:', value: payment.status.toUpperCase() },
     ];
     
     y -= 40;
