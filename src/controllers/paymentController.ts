@@ -728,7 +728,7 @@ const generatePaymentReceipt = async (paymentId: string): Promise<string> => {
   try {
     // Find payment with user and batch details
     const payment = await Payment.findById(paymentId)
-      .populate('userId', 'name email phone')
+      .populate('userId', 'firstName lastName email phoneNumber')
       .populate('batchId', 'name');
     
     if (!payment) {
@@ -747,10 +747,105 @@ const generatePaymentReceipt = async (paymentId: string): Promise<string> => {
     const margin = 50;
     const width = page.getWidth() - 2 * margin;
     
-    // Draw header
+    // Try to embed logo (now using PNG)
+    let logoImage = null;
+    try {
+      const logoPath = path.join(process.cwd(), 'public', 'swrzee-logo.png');
+      if (fs.existsSync(logoPath)) {
+        const logoBytes = fs.readFileSync(logoPath);
+        logoImage = await pdfDoc.embedPng(logoBytes);
+      }
+    } catch (error) {
+      logger.warn('Could not embed logo image:', error);
+    }
+    
+    // Draw company header
+    let y = page.getHeight() - margin;
+    
+    // Draw logo if available
+    if (logoImage) {
+      const logoWidth = 60;
+      const logoHeight = 60;
+      const logoX = margin;
+      const logoY = y - logoHeight;
+      
+      page.drawImage(logoImage, {
+        x: logoX,
+        y: logoY,
+        width: logoWidth,
+        height: logoHeight,
+      });
+      
+      // Company info starts after logo
+      y = logoY - 20;
+    } else {
+      y -= 20;
+    }
+    
+    // Draw company name
+    page.drawText('Swrzee Enterprise', {
+      x: margin,
+      y,
+      size: 16,
+      font: boldFont,
+    });
+    
+    y -= 25;
+    
+    // Draw company tagline
+    page.drawText('Micro Manufacturing cum Training Centre', {
+      x: margin,
+      y,
+      size: 12,
+      font: font,
+    });
+    
+    y -= 20;
+    
+    // Draw registration details
+    page.drawText('Udyam Regd. No. AS-19 - 0018220 | Estd-01-01-2025', {
+      x: margin,
+      y,
+      size: 10,
+      font: font,
+    });
+    
+    y -= 20;
+    
+    // Draw address
+    page.drawText('PO & Dist. - Kokrajhar : Bodoland : Assam : 783370', {
+      x: margin,
+      y,
+      size: 10,
+      font: font,
+    });
+    
+    y -= 20;
+    
+    // Draw email
+    page.drawText('Email - enterprise@swrzee.in', {
+      x: margin,
+      y,
+      size: 10,
+      font: font,
+    });
+    
+    y -= 30;
+    
+    // Draw border line
+    page.drawLine({
+      start: { x: margin, y },
+      end: { x: margin + width, y },
+      thickness: 2,
+      color: rgb(0, 0, 0),
+    });
+    
+    y -= 30;
+    
+    // Draw receipt title
     page.drawText('PAYMENT RECEIPT', {
       x: margin,
-      y: page.getHeight() - margin,
+      y,
       size: 18,
       font: boldFont,
     });
@@ -767,7 +862,7 @@ const generatePaymentReceipt = async (paymentId: string): Promise<string> => {
       { label: 'Status:', value: payment.status.toUpperCase() },
     ];
     
-    let y = page.getHeight() - margin - 40;
+    y -= 40;
     
     receiptDetails.forEach(detail => {
       page.drawText(detail.label, {
@@ -799,9 +894,9 @@ const generatePaymentReceipt = async (paymentId: string): Promise<string> => {
     y -= 25;
     
     const customerDetails = [
-      { label: 'Name:', value: user.name },
+      { label: 'Name:', value: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'N/A' },
       { label: 'Email:', value: user.email },
-      { label: 'Phone:', value: user.phone || 'N/A' },
+      { label: 'Phone:', value: user.phoneNumber || 'N/A' },
     ];
     
     customerDetails.forEach(detail => {
