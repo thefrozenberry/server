@@ -10,6 +10,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import { logger } from './utils/logger';
 import { morganMiddleware } from './middlewares/morgan';
 import path from 'path';
+import { config } from './config/config';
 
 // Import routes
 import authRoutes from './routes/authRoutes';
@@ -43,7 +44,10 @@ app.set('trust proxy', 1);
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+
+// Apply CORS with configuration from config
+app.use(cors(config.cors));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morganMiddleware);
