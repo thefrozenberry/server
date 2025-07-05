@@ -7,6 +7,7 @@ import {
   getUserById,
   updateUserById,
   getCurrentUserBatch,
+  deleteUserById,
 } from '../controllers/userController';
 import { protect, admin } from '../middlewares/authMiddleware';
 import { upload } from '../middlewares/uploadMiddleware';
@@ -25,8 +26,7 @@ router.put('/profile/image', protect, uploadAvatar);
 router.get('/', protect, admin, getAllUsers);
 router.get('/:id', protect, admin, getUserById);
 router.put('/:id', protect, admin, updateUserById);
-// TODO: Implement delete user functionality
-// router.delete('/:id', protect, admin, deleteUserById);
+router.delete('/:id', protect, admin, deleteUserById);
 // TODO: Implement status update functionality
 // router.put('/:id/status', protect, admin, updateUserStatus);
 

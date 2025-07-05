@@ -466,4 +466,35 @@ export const getCurrentUserBatch = async (req: Request, res: Response, next: Nex
   } catch (error) {
     next(error);
   }
+};
+
+/**
+ * Delete user by ID (Admin only)
+ */
+export const deleteUserById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.findById(id);
+    
+    if (!user) {
+      throw new AppError('User not found', 404);
+    }
+
+    // Delete profile image from Cloudinary if exists
+    if (user.profileImage?.cloudinaryId) {
+      await deleteFromCloudinary(user.profileImage.cloudinaryId);
+    }
+
+    // Delete user from database
+    await user.deleteOne();
+    
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully',
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
 }; 
